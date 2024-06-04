@@ -1,25 +1,28 @@
-package cli_renderer
+package renderer
 
 import (
 	"github.com/gdamore/tcell/v2"
 )
 
-const cellStyle = '■'
+const FilledCellChar = '■'
+const EmptyCellCHar = ' '
 
 type Renderer struct {
-	Screen tcell.Screen
+	screen tcell.Screen
 }
 
-func (r *Renderer) SetCursorBlock() {
-	r.Screen.SetCursorStyle(tcell.CursorStyleSteadyBlock)
+func NewRenderer(s tcell.Screen) Renderer {
+	s.Init()
+	s.SetCursorStyle(tcell.CursorStyleSteadyBlock)
+	return Renderer{s}
 }
 
 func (r *Renderer) SetCursorPosition(x, y int) {
-	r.Screen.ShowCursor(x, y)
+	r.screen.ShowCursor(x, y)
 }
 
 func (r *Renderer) RenderToScreen() {
-	r.Screen.Show()
+	r.screen.Show()
 }
 
 func (r *Renderer) DrawLine(startX, startY, endX, endY int) {
@@ -43,7 +46,7 @@ func (r *Renderer) DrawLine(startX, startY, endX, endY int) {
 	y := startY
 
 	for {
-		r.Screen.SetContent(x, y, cellStyle, nil, tcell.StyleDefault)
+		r.screen.SetContent(x, y, FilledCellChar, nil, tcell.StyleDefault)
 		if x == endX && y == endY {
 			break
 		}
